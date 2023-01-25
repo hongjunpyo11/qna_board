@@ -3,6 +3,9 @@ package com.ll.exam.sbb;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 @Controller
 public class MainController {
 
@@ -67,6 +70,23 @@ public class MainController {
 
         return increaseNo;
     }
+
+    @GetMapping("/gugudan")
+    @ResponseBody
+    public String showGugudan(Integer dan, Integer limit) {
+        if (limit == null) {
+            limit = 9;
+        }
+
+        if (dan == null) {
+            dan = 9;
+        }
+
+        Integer finalDan = dan;
+        return IntStream.rangeClosed(1, limit)
+                .mapToObj(i -> "%d * %d = %d".formatted(finalDan, i, finalDan * i))
+                .collect(Collectors.joining("<br>\n"));
+    }
 }
 
 /**
@@ -75,7 +95,7 @@ public class MainController {
  * => 6
  *
  * 문제 2
- * http://localhost:8080/plus?a=1&b=5
+ * http://localhost:8080/minus?a=1&b=5
  * => -4
  *
  * 문제 3
