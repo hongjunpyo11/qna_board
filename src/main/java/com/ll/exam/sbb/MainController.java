@@ -1,5 +1,7 @@
 package com.ll.exam.sbb;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -115,7 +117,7 @@ public class MainController {
         };
     }
 
-    @GetMapping("/saveSession/{naem}/{value}")
+    @GetMapping("/saveSession/{name}/{value}")
     @ResponseBody
     public String saveSession(@PathVariable String name, @PathVariable String value, HttpServletRequest req) {
         HttpSession session = req.getSession();
@@ -132,14 +134,42 @@ public class MainController {
 
         return "세션변수 %s의 값이 %s 입니다.".formatted(name, value);
     }
+
+    @GetMapping("/addArticle")
+    @ResponseBody
+    public String addArticle(String title, String body) {
+        Article article = new Article(title, body);
+
+        return "%d번 게시물이 생성되었습니다.".formatted(article.getId());
+    }
+}
+
+@AllArgsConstructor
+class Article {
+    private static int lastId = 0;
+    @Getter
+    private final int id;
+    private final String title;
+    private final String body;
+
+    public Article(String title, String body) {
+        this(++lastId, title, body);
+    }
 }
 
 /**
- * 문제 6
- * - http://localhost:8080/saveSessionAge/10
- * - http://localhost:8080/getSessionAge
- *   => 10
- * - 스프링 재시작
- * - http://localhost:8080/getSessionAge
- *   => 10
+ * 문제 7
+ * - http://localhost:8080/addArticle?title=제목&body=내용
+ * => 1번글이 등록되었습니다.
+ * - http://localhost:8080/addArticle?title=제목&body=내용
+ * => 2번글이 등록되었습니다.
+ *
+ * - http://localhost:8080/article/1
+ * {
+ *     "id":1,
+ *     "title":"제목",
+ *     "body":"내용
+ * }
+ *
+ * 힌트 : 액션메서드의 리턴타입을 Article 클래스로 지정
  */
