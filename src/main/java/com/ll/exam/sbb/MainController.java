@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -113,18 +114,32 @@ public class MainController {
             default -> "모름";
         };
     }
+
+    @GetMapping("/saveSession/{naem}/{value}")
+    @ResponseBody
+    public String saveSession(@PathVariable String name, @PathVariable String value, HttpServletRequest req) {
+        HttpSession session = req.getSession();
+
+        session.setAttribute(name, value);
+
+        return "세션변수 %s의 값이 %s(으)로 설정되었습니다.".formatted(name, value);
+    }
+
+    @GetMapping("/getSession/{name}")
+    @ResponseBody
+    public String getSession(@PathVariable String name, HttpSession session) {
+        String value = (String) session.getAttribute(name);
+
+        return "세션변수 %s의 값이 %s 입니다.".formatted(name, value);
+    }
 }
 
 /**
- * 문제 1
- * http://localhost:8080/plus?a=1&b=5
- * => 6
- *
- * 문제 2
- * http://localhost:8080/minus?a=1&b=5
- * => -4
- *
- * 문제 3
- * http://localhost:8080/increase
- * => 0 // 새로고침 시 1씩 증가
+ * 문제 6
+ * - http://localhost:8080/saveSessionAge/10
+ * - http://localhost:8080/getSessionAge
+ *   => 10
+ * - 스프링 재시작
+ * - http://localhost:8080/getSessionAge
+ *   => 10
  */
