@@ -2,6 +2,7 @@ package com.ll.exam.sbb;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -234,26 +235,22 @@ class Article {
 }
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
+@Setter
 class Person {
     private int id;
     private int age;
     private String name;
-};
+
+    public Person(int age, String name) {
+        this.age = age;
+        this.name = name;
+    }
+}
 
 /**
- * 문제 7
- * - http://localhost:8080/addArticle?title=제목&body=내용
- * => 1번글이 등록되었습니다.
- * - http://localhost:8080/addArticle?title=제목&body=내용
- * => 2번글이 등록되었습니다.
+ * 스프링이 객체를 조립해서 넣어준다는 것의 의미
  *
- * - http://localhost:8080/article/1
- * {
- *     "id":1,
- *     "title":"제목",
- *     "body":"내용
- * }
- *
- * 힌트 : 액션메서드의 리턴타입을 Article 클래스로 지정
+ * 메서드를 만든다 -> 나중에 호출을 하겠군!
  */
